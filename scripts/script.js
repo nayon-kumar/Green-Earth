@@ -1,4 +1,52 @@
-// For category
+const categoriesSelect = document.getElementById("categories");
+const treeSelect = document.getElementById("trees");
+const loadingSpinner = document.getElementById("loadingSpinner");
+const all = document.getElementById("all");
+
+// For all trees btn
+all.addEventListener("click", () => {
+  const allButtons = document.querySelectorAll("#categories li, #all");
+
+  allButtons.forEach((item) => {
+    item.classList.remove("bg-[#15803D]");
+    item.classList.remove("text-white");
+  });
+
+  all.classList.add("bg-[#15803D]");
+  all.classList.add("text-white");
+  loadTrees();
+});
+
+// For loading
+const showLoading = () => {
+  loadingSpinner.classList.remove("hidden");
+};
+const hideLoading = () => {
+  loadingSpinner.classList.add("hidden");
+};
+
+// For toggle btn
+const selectCategory = async (id, btn) => {
+  const allButtons = document.querySelectorAll("#categories li, #all");
+
+  allButtons.forEach((item) => {
+    item.classList.remove("bg-[#15803D]");
+    item.classList.remove("text-white");
+  });
+
+  btn.classList.add("bg-[#15803D]");
+  btn.classList.add("text-white");
+  treeSelect.innerHTML = "";
+  showLoading();
+  const res = await fetch(
+    `https://openapi.programming-hero.com/api/category/${id}`,
+  );
+  const data = await res.json();
+  hideLoading();
+  displayTrees(data.plants);
+};
+
+// For category (Load category data)
 const loadCategories = async () => {
   const url = "https://openapi.programming-hero.com/api/categories";
   try {
@@ -11,28 +59,28 @@ const loadCategories = async () => {
 };
 loadCategories();
 
-const categoriesSelect = document.getElementById("categories");
+// Display all categories
 const displayCategories = (categories) => {
   categoriesSelect.innerHTML = "";
   for (let category of categories) {
     const li = document.createElement("li");
+    li.classList.add("rounded-lg");
     li.innerHTML = `
         <a>${category.category_name}</a>
     `;
+    li.onclick = () => selectCategory(category.id, li);
     categoriesSelect.appendChild(li);
   }
 };
 
-// For tree
-const loadingSpinner = document.getElementById("loadingSpinner");
+// For tree (Load tree data)
 const loadTrees = async () => {
   const url = "https://openapi.programming-hero.com/api/plants";
   try {
-    loadingSpinner.classList.remove("hidden");
-    loadingSpinner.classList.add("flex");
+    showLoading();
     const res = await fetch(url);
     const data = await res.json();
-    loadingSpinner.classList.add("hidden");
+    hideLoading();
     displayTrees(data.plants);
   } catch (error) {
     console.error("Error: ", error);
@@ -40,7 +88,7 @@ const loadTrees = async () => {
 };
 loadTrees();
 
-const treeSelect = document.getElementById("trees");
+// Display All trees
 const displayTrees = (trees) => {
   treeSelect.innerHTML = "";
   for (let tree of trees) {
