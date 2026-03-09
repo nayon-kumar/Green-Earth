@@ -2,6 +2,9 @@ const categoriesSelect = document.getElementById("categories");
 const treeSelect = document.getElementById("trees");
 const loadingSpinner = document.getElementById("loadingSpinner");
 const all = document.getElementById("all");
+const cartBtn = document.getElementById("cartBtn");
+const cardContainer = document.getElementById("cardContainer");
+const cartCount = document.getElementById("cartCount");
 
 // For all trees btn
 all.addEventListener("click", () => {
@@ -114,6 +117,7 @@ const displayTrees = (trees) => {
                     </div>
                     <div class="text-center">
                       <button
+                        onclick = "addCart(${tree.id}, '${tree.name}', ${tree.price}, 1)"
                         class="mt-3 bg-[#15803D] text-white w-full py-3 rounded-full cursor-pointer"
                       >
                         Add to Cart
@@ -123,4 +127,80 @@ const displayTrees = (trees) => {
     `;
     treeSelect.appendChild(div);
   }
+};
+
+let carts = [];
+
+// Update cart count
+const updateCart = () => {
+  cartCount.innerText = carts.length;
+};
+
+// Add to cart
+const addCart = (id, name, price = 0, count = 0) => {
+  for (let myCart of carts) {
+    if (myCart.id == id) {
+      myCart.count++;
+      return;
+    }
+  }
+  const treeObj = {
+    id,
+    name,
+    price,
+    count,
+  };
+  carts.push(treeObj);
+  updateCart();
+};
+
+cartBtn.addEventListener("click", function () {
+  showCart();
+});
+
+// Display All cart
+const showCart = () => {
+  cardContainer.innerHTML = "";
+  let totalPrice = 0;
+  for (let cart of carts) {
+    let price = cart.price * cart.count;
+    totalPrice = totalPrice + price;
+    const div = document.createElement("div");
+    div.innerHTML = `
+    <div
+                          class="bg-[#F0FDF4] px-3 py-2 mb-2 flex justify-between items-center"
+                        >
+                          <div>
+                            <h4 class="font-semibold mb-1">${cart.name}</h4>
+                            <p class="text-[#1F2937]">$<span>${cart.price}</span> x <span>${cart.count}</span></p>
+                          </div>
+                          <div>
+                            <p onclick="removeCart(${cart.id})" class="cursor-pointer">
+                              <i class="fa-solid fa-xmark"></i>
+                            </p>
+                          </div>
+                        </div>
+    `;
+    cardContainer.appendChild(div);
+  }
+  const div = document.createElement("div");
+  div.innerHTML = `
+  <div>
+                        <hr class="px-3 my-5" />
+                        <div
+                          class="flex justify-between px-3 text-[#1F2937] font-semibold"
+                        >
+                          <p>Total:</p>
+                          <p>$${totalPrice}</p>
+                        </div>
+                      </div>
+  `;
+  cardContainer.appendChild(div);
+};
+
+// Remove cart
+const removeCart = (id) => {
+  carts = carts.filter((item) => item.id !== id);
+  showCart();
+  updateCart();
 };

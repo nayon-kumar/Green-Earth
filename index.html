@@ -61,7 +61,9 @@
                 <li><a>Gallery</a></li>
               </ul>
             </div>
-            <a class="font-bold text-xl text-white cursor-pointer"
+            <a
+              onclick="location.reload()"
+              class="font-bold text-xl text-white cursor-pointer"
               >Green Earth</a
             >
           </div>
@@ -178,9 +180,12 @@
                 <input id="my-drawer-5" type="checkbox" class="drawer-toggle" />
                 <div class="drawer-content md:pr-17">
                   <!-- Page content here -->
-                  <label for="my-drawer-5" class="drawer-button btn btn-primary"
+                  <label
+                    id="cartBtn"
+                    for="my-drawer-5"
+                    class="drawer-button btn btn-primary"
                     ><i class="fa-solid fa-cart-arrow-down"></i
-                    ><span>0</span></label
+                    ><span id="cartCount">0</span></label
                   >
                 </div>
                 <div class="drawer-side">
@@ -191,8 +196,18 @@
                   ></label>
                   <ul class="menu bg-base-200 min-h-full w-65 p-4">
                     <!-- Sidebar content here -->
-                    <li><a>Sidebar Item 1</a></li>
-                    <li><a>Sidebar Item 2</a></li>
+                    <h3 class="font-semibold text-xl mb-5">Your Cart</h3>
+                    <div id="cardContainer">
+                      <div>
+                        <hr class="px-3 my-5" />
+                        <div
+                          class="flex justify-between px-3 text-[#1F2937] font-semibold"
+                        >
+                          <p>Total:</p>
+                          <p>$1000</p>
+                        </div>
+                      </div>
+                    </div>
                   </ul>
                 </div>
               </div>
